@@ -5,8 +5,15 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from datetime import *
 
-
-
+"""
+TODO
+-napraviti nacin da se biraju rojevi
+-napraviti da se na osnovu izabranih rojeva prebroji koliko kojih meteora ima i da se na osnovu toga posle napravi tabela.
+-napraviti mogunost stampanja meteora po intervalu?
+-napraviti da generise granice intervala tako sto se unutar while petlje proverava da li je dati time_stamp unutar trenutnog intervala
+-napraviti textBox za interval
+-napraviti jos jedan table koji samo stampa raspodelu po magnitudama
+"""
 class BrowseWindow(QWidget):
     
     def __init__(self):
@@ -27,28 +34,24 @@ class BrowseWindow(QWidget):
         self.lbl1 = QLabel("Save current path?", self)
         self.lbl1.move(160, 70)
 
-
-        
-
         OK = QPushButton('OK', self)
         OK.resize(150, 50)
         OK.move(50, 110)
-        OK.clicked.connect(self.okButton)
+        OK.clicked.connect(self.ok_button)
 
         Cancel = QPushButton('Cancel', self)
         Cancel.resize(150, 50)
         Cancel.move (250, 110)
-        Cancel.clicked.connect(self.cancelButton)
+        Cancel.clicked.connect(self.cancel_button)
         
-    def cancelButton(self):
+    def cancel_button(self):
         self.close()
         
-    def okButton(self):
+    def ok_button(self):
         f = open("config/browse.txt", "w")
         f.write(self.path)
         f.close()
         self.close()     
-
 
 class MainWindow(QMainWindow):
     
@@ -56,11 +59,9 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         
         self.initUI()
-        
-        
+                
     def initUI(self):
 
-        
         #toolbar init
         
         BrowseAct = QAction(QIcon('icons/browse.png'), 'Browse for folder', self)
@@ -77,14 +78,13 @@ class MainWindow(QMainWindow):
         self.setFixedSize(self.size())
         self.setWindowTitle('Joystick Observation') 
         self.center()  
-       
-        
+               
         #Button init
 
         make_table = QPushButton('Make Table', self)
         make_table.resize(150, 50)
         make_table.move(95, self.height-100)
-        make_table.clicked.connect(self.tableButton)
+        make_table.clicked.connect(self.table_button)
         
         self.show()
 
@@ -93,23 +93,26 @@ class MainWindow(QMainWindow):
         self.B.show()
         
 
-    def tableButton(self):
-        #def MakingHTML() 
+    def table_button(self):
         path = "example.txt"
         self.session = open(path, "r").read().splitlines()
-        self.getRows()
-        self.getTable()
-        self.writeTable()
+        self.get_rows()
+        self.get_table()
+        self.get_start_date()
 
-    def getRows(self):
+    def get_rows(self):
         self.table_rows = []
+        self.time_stamps = []
 
         for i in range(0, len(self.session)):
                 meteor = self.session[i].split()
                 row = "<tr>\n" + "<td>" + str(i+1) + "</td>\n" + "<td>" + meteor[2] + "</td>\n" + "<td>" + meteor[1] + "</td>\n" + "<td>" + meteor[0] + "</td>\n" + "</tr>\n"
+                string_date = meteor[2]
+                date = datetime.strptime(string_date, "%H:%M:%S")
+                self.time_stamps.append(date)   
                 self.table_rows.append(row)
             
-    def getTable(self):
+    def get_table(self):
         begin = open("config/begin.txt", "r").read()
         self.table = ""
 
@@ -122,7 +125,14 @@ class MainWindow(QMainWindow):
 
         QMessageBox.information(self, "Success!", "Table successfully made!", QMessageBox.Ok)
 
-    def writeTable(self):
+    def get_start_date(self):
+        self.start_date = self.time_stamps[0]
+        self.start_date = self.start_date.replace(second = 0)
+        print("Kurcina")  
+        print(self.start_date)           
+        
+
+    def write_table(self):
         self.code = "table.html"
         table = open(self.code, "w")
         table.write(self.table)   
