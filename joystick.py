@@ -96,22 +96,39 @@ class MainWindow(QMainWindow):
     def table_button(self):
         path = "example.txt"
         self.session = open(path, "r").read().splitlines()
+        #self.get_start_date()        
         self.get_rows()
         self.get_table()
-        self.get_start_date()
+        self.write_table()
+        
+        
 
     def get_rows(self):
         self.table_rows = []
         self.time_stamps = []
-
-        for i in range(0, len(self.session)):
-                meteor = self.session[i].split()
-                row = "<tr>\n" + "<td>" + str(i+1) + "</td>\n" + "<td>" + meteor[2] + "</td>\n" + "<td>" + meteor[1] + "</td>\n" + "<td>" + meteor[0] + "</td>\n" + "</tr>\n"
-                string_date = meteor[2]
+        help_rows = []
+        i = 0
+        while i < len(self.session):
+                self.meteor = self.session[i].split()
+                row = self.make_row(i)
+                string_date = self.meteor[2]
                 date = datetime.strptime(string_date, "%H:%M:%S")
                 self.time_stamps.append(date)   
                 self.table_rows.append(row)
-            
+                i += 1
+        start_row = self.make_start_row()
+        self.table_rows.insert(0, start_row)
+
+    def make_start_row(self):
+        self.get_start_date()
+        start_date = self.get_start_date()
+        start_row = "<tr>\n" + "<td>" + "START" + "</td>\n" + "<td>" + start_date + "</td>\n" + "<td>" + "/" + "</td>\n" + "<td>" + "/" + "</td>\n" + "</tr>\n"
+        return start_row
+   
+    def make_row(self, i):
+        row = "<tr>\n" + "<td>" + str(i+1) + "</td>\n" + "<td>" + self.meteor[2] + "</td>\n" + "<td>" + self.meteor[1] + "</td>\n" + "<td>" + self.meteor[0] + "</td>\n" + "</tr>\n"
+        return row        
+
     def get_table(self):
         begin = open("config/begin.txt", "r").read()
         self.table = ""
@@ -120,7 +137,7 @@ class MainWindow(QMainWindow):
                 self.table += str(self.table_rows[i])
                     
         end = open("config/end.txt", "r").read()
-        
+
         self.table = begin + self.table + end
 
         QMessageBox.information(self, "Success!", "Table successfully made!", QMessageBox.Ok)
@@ -128,9 +145,14 @@ class MainWindow(QMainWindow):
     def get_start_date(self):
         self.start_date = self.time_stamps[0]
         self.start_date = self.start_date.replace(second = 0)
-        print("Kurcina")  
-        print(self.start_date)           
-        
+        string_date = self.start_date.strftime('%H:%M:%S') 
+        return string_date
+           
+    def add_interval(tm, mins):
+        fulldate = datetime(100, 1, 1, tm.hour, tm.minute, tm.second)
+        secs = mins*60
+        fulldate = fulldate + timedelta(seconds=secs)
+        return fulldate.time()   
 
     def write_table(self):
         self.code = "table.html"
