@@ -15,17 +15,26 @@ class BrowseWindow(QWidget):
         self.initUI()
 
     def initUI(self):
-        self.setGeometry(300, 300, 450, 200)
+        browse_width = 450
+        browse_height = 200
+
+        lbl0_x = (browse_width/100)*11.11
+        lbl0_y = (browse_height/100)*10
+
+        lbl1_x = (browse_width/100)*35.56
+        lbl1_y = (browse_height/100)*35
+
+        self.setGeometry(300, 300, browse_width, browse_height)
         self.setWindowTitle('Browse')
         self.setFixedSize(self.size())
-        self.path = str(QFileDialog.getExistingDirectory())
+        self.path = str(QFileDialog.getOpenFileName())
         
         self.lbl0 = QLabel("Current Path: "+ self.path, self)
-        self.lbl0.move(50, 20)   
+        self.lbl0.move(lbl0_x, lbl0_y)   
 
 
         self.lbl1 = QLabel("Save current path?", self)
-        self.lbl1.move(160, 70)
+        self.lbl1.move(lbl1_x, lbl1_y)
 
 
         
@@ -119,10 +128,16 @@ class MainWindow(QMainWindow):
         
 
     def tableButton(self):
-
+        
+        self.get_log()
         self.get_table()
         
     
+    def get_log(self):
+        path = open('config/browse.txt', 'r').read()
+        print (path)
+        open('config/browse.txt', 'w').close()
+
     def get_table(self):
        
         QMessageBox.information(self, "Success!", "Table successfully made!", QMessageBox.Ok)
