@@ -53,8 +53,9 @@ class BrowseWindow(QWidget):
         self.close()
         
     def okButton(self):
+        sliced_part = self.path[2:len(self.path)-19]       
         f = open("config/browse.txt", "w")
-        f.write(self.path)
+        f.write(sliced_part)
         f.close()
         self.close()     
 
