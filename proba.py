@@ -119,7 +119,7 @@ class MainWindow(QMainWindow):
         make_table = QPushButton('Make Table', self)
         make_table.resize(self.table_width, self.table_height)
         make_table.move(self.table_x, self.table_y)
-        make_table.clicked.connect(self.tableButton)
+        make_table.clicked.connect(self.table_button)
         
         self.show()
 
@@ -128,19 +128,36 @@ class MainWindow(QMainWindow):
         self.B.show()
         
 
-    def tableButton(self):
+    def table_button(self):
         
-        self.get_log()
-        self.get_table()
-        
+        log = self.get_log()
+        table  = self.get_table(log)
+        f = open("table.html", "w")
+        f.write(table)
+        f.close()
+        QMessageBox.information(self, "Success!", "Table successfully made!", QMessageBox.Ok)
+                
     
     def get_log(self):
         path = open('config/browse.txt', 'r').read()
-        print (path)
         open('config/browse.txt', 'w').close()
 
-    def get_table(self):
-       
+        log = open(path, "r").read().splitlines()
+        return log
+        
+
+    def get_table(self, log):
+        table = open("config/begin.txt").read()
+        for i in range(0, len(log)):
+            meteor = log[i].split()
+            row = "<tr>\n" + "<td>" + str(i+1) + "</td>\n" + "<td>" + meteor[2] + "</td>\n" + "<td>" + meteor[1] + "</td>\n" + "<td>" + meteor[0] + "</td>\n" + "</tr>\n"
+            table += row
+        end = open("config/end.txt").read()
+        table += end
+        return table
+        
+            
+              
         QMessageBox.information(self, "Success!", "Table successfully made!", QMessageBox.Ok)
 
        
