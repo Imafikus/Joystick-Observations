@@ -87,7 +87,7 @@ class MainWindow(QMainWindow):
         self.table_width = (self.main_width/100)*44
         self.table_height = (self.main_height/100)*16.67    
         self.table_x = (self.main_width/100)*28
-        self.table_y = (self.main_height-100)
+        self.table_y = (self.main_height/100)*66.67
 
         self.interval_width = (self.main_width/100)*23.33
         self.interval_height =(self.main_height/100)*10
@@ -101,16 +101,17 @@ class MainWindow(QMainWindow):
         self.lbl_mins_y = (self.main_width/100)*25
 
         self.setGeometry(300, 300, self.main_width, self.main_height)
-        #self.setFixedSize(self.size())
+        self.setFixedSize(self.size())
         self.setWindowTitle('Joystick Observation') 
         self.center()  
                 
         #interval init
-        self.lbl_interval = QLabel("Interval", self)
+        self.lbl_interval = QLabel("Interval:", self)
         self.lbl_interval.move(self.lbl_interval_x, self.lbl_interval_y)
         self.lbl_mins = QLabel("Mins.", self)
         self.lbl_mins.move(self.lbl_mins_x, self.lbl_mins_y)
         self.interval = QLineEdit(self)
+        self.interval.setText("5")
         self.interval.resize(self.interval_width, self.interval_height)
         self.interval.move(self.interval_x, self.interval_y)
         
@@ -129,18 +130,21 @@ class MainWindow(QMainWindow):
         
 
     def table_button(self):
-        
+        interval = self.interval.text()
         log = self.get_log()
         table  = self.get_table(log)
-        f = open("table.html", "w")
-        f.write(table)
-        f.close()
-        QMessageBox.information(self, "Success!", "Table successfully made!", QMessageBox.Ok)
+        if self.is_number(interval)== False:
+            QMessageBox.warning(self, "Bad Input!", "Interval must be an integer number!", QMessageBox.Ok)    
+        else:
+            f = open("table.html", "w")
+            f.write(table)
+            f.close()
+            QMessageBox.information(self, "Success!", "Table successfully made!", QMessageBox.Ok)
                 
     
     def get_log(self):
         path = open('config/browse.txt', 'r').read()
-        open('config/browse.txt', 'w').close()
+        #open('config/browse.txt', 'w').close() videti gde ovo pomeriti
 
         log = open(path, "r").read().splitlines()
         return log
@@ -155,7 +159,13 @@ class MainWindow(QMainWindow):
         end = open("config/end.txt").read()
         table += end
         return table
-        
+
+    def is_number(self,s):
+        try:
+            int(s)
+            return True
+        except ValueError:
+            return False         
             
               
         QMessageBox.information(self, "Success!", "Table successfully made!", QMessageBox.Ok)
