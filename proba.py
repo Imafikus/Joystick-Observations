@@ -24,10 +24,22 @@ class BrowseWindow(QWidget):
         lbl1_x = (browse_width/100)*35.56
         lbl1_y = (browse_height/100)*35
 
+        ok_width = (browse_width/100)*33.33
+        ok_height = (browse_height/100)*25
+        ok_x = (browse_width/100)*11.11
+        ok_y = (browse_height/100)*55
+
+        cancel_width = (browse_width/100)*33.33
+        cancel_height = (browse_height/100)*25
+        cancel_x = (browse_width/100)*55.56
+        cancel_y = (browse_height/100)*55
+
         self.setGeometry(300, 300, browse_width, browse_height)
         self.setWindowTitle('Browse')
         self.setFixedSize(self.size())
         self.path = str(QFileDialog.getOpenFileName())
+        self.path = self.path[2:len(self.path)-19] 
+        
         
         self.lbl0 = QLabel("Current Path: "+ self.path, self)
         self.lbl0.move(lbl0_x, lbl0_y)   
@@ -40,22 +52,21 @@ class BrowseWindow(QWidget):
         
 
         OK = QPushButton('OK', self)
-        OK.resize(150, 50)
-        OK.move(50, 110)
+        OK.resize(ok_width, ok_height)
+        OK.move(ok_x, ok_y)
         OK.clicked.connect(self.okButton)
 
         Cancel = QPushButton('Cancel', self)
-        Cancel.resize(150, 50)
-        Cancel.move (250, 110)
+        Cancel.resize(cancel_width, cancel_height)
+        Cancel.move (cancel_x, cancel_y)
         Cancel.clicked.connect(self.cancelButton)
         
     def cancelButton(self):
         self.close()
         
-    def okButton(self):
-        sliced_part = self.path[2:len(self.path)-19]       
+    def okButton(self):    
         f = open("config/browse.txt", "w")
-        f.write(sliced_part)
+        f.write(self.path)
         f.close()
         self.close()     
 
@@ -132,19 +143,22 @@ class MainWindow(QMainWindow):
     def table_button(self):
         if self.check_browse_path()== False:
             QMessageBox.warning(self, "No browse path!", "Choose browse path.", QMessageBox.Ok)
-        return
+        else:
   
-        interval = self.interval.text()        
-        if self.check_interval_input(interval)== False:
-            QMessageBox.warning(self, "Bad Input!", "Interval must be an integer number.", QMessageBox.Ok)
-        else:  
-            browse = open('config/browse.txt', 'r').read()
-            log = self.get_log()
-            table  = self.get_table(log)
-            f = open("table.html", "w")
-            f.write(table)
-            f.close()
-            QMessageBox.information(self, "Success!", "Table successfully made!", QMessageBox.Ok)
+            interval = self.interval.text()        
+            if self.check_interval_input(interval)== False:
+                QMessageBox.warning(self, "Bad Input!", "Interval must be an integer number.", QMessageBox.Ok)
+            else:
+                browse = open('config/browse.txt', 'r').read()
+                log = self.get_log()
+                table  = self.get_table(log)
+                dates = self.get_dates(log)
+                print("DATUMI")
+                print (dates)
+                f = open("table.html", "w")
+                f.write(table)
+                f.close()
+                QMessageBox.information(self, "Success!", "Table successfully made!", QMessageBox.Ok)
                 
     
     def get_log(self):
@@ -152,7 +166,21 @@ class MainWindow(QMainWindow):
         open('config/browse.txt', 'w').close() 
         log = open(path, "r").read().splitlines()
         return log
-        
+
+    def get_dates(self, log):  
+        dates = []
+        i = 0
+        start_date = datetime.strptime("13:48:00", "%H:%M:%S")
+        print ("DAAAAAATE")
+        print(start_date)
+        while i < len(log):
+            meteor = log[i].split()
+            string_date = meteor[2]
+            date = datetime.strptime(string_date)
+            dates.append(date) 
+            i += 1
+        return dates
+                
 
     def get_table(self, log):
         table = open("config/begin.txt").read()
