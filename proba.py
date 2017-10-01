@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from datetime import *
-
+#uporedjiati sa stringom, ako je trenutni 
 
 
 class BrowseWindow(QWidget):
@@ -149,17 +149,22 @@ class MainWindow(QMainWindow):
             if self.check_interval_input(interval)== False:
                 QMessageBox.warning(self, "Bad Input!", "Interval must be an integer number.", QMessageBox.Ok)
             else:
+                interval = int(interval)
                 browse = open('config/browse.txt', 'r').read()
                 log = self.get_log()
                 table  = self.get_table(log)
-                dates = self.get_dates(log)
+                dates = self.get_dates(log, interval)
                 print("DATUMI")
-                print (dates)
+                self.print_dates(dates)
+                return
                 f = open("table.html", "w")
                 f.write(table)
                 f.close()
                 QMessageBox.information(self, "Success!", "Table successfully made!", QMessageBox.Ok)
-                
+
+    def print_dates(self, dates):
+        for date in dates:
+            print (date)            
     
     def get_log(self):
         path = open('config/browse.txt', 'r').read()
@@ -167,17 +172,22 @@ class MainWindow(QMainWindow):
         log = open(path, "r").read().splitlines()
         return log
 
-    def get_dates(self, log):  
+    def get_dates(self, log, interval):  
         dates = []
         i = 0
         start_date = datetime.strptime("13:48:00", "%H:%M:%S")
-        print ("DAAAAAATE")
-        print(start_date)
+        dates.append(start_date)
+        ref_date = self.add_interval(start_date, interval)
         while i < len(log):
             meteor = log[i].split()
             string_date = meteor[2]
-            date = datetime.strptime(string_date)
-            dates.append(date) 
+            date = datetime.strptime(string_date, "%H:%M:%S")
+            if date <= ref_date: 
+                dates.append(date)
+            else:
+                ref_date = self.add_interval(ref_date, interval)
+                dates.append(ref_date)
+                dates.append(date) 
             i += 1
         return dates
                 
@@ -191,6 +201,12 @@ class MainWindow(QMainWindow):
         end = open("config/end.txt").read()
         table += end
         return table
+
+    def add_interval(self, tm, mins):
+        fulldate = datetime(1900, 1, 1, tm.hour, tm.minute, tm.second)
+        secs = mins*60
+        fulldate = fulldate + timedelta(seconds=secs)
+        return fulldate 
 
     def check_interval_input(self,s):
         try:
