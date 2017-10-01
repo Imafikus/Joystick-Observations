@@ -130,12 +130,17 @@ class MainWindow(QMainWindow):
         
 
     def table_button(self):
-        interval = self.interval.text()
-        log = self.get_log()
-        table  = self.get_table(log)
-        if self.is_number(interval)== False:
-            QMessageBox.warning(self, "Bad Input!", "Interval must be an integer number!", QMessageBox.Ok)    
-        else:
+        if self.check_browse_path()== False:
+            QMessageBox.warning(self, "No browse path!", "Choose browse path.", QMessageBox.Ok)
+        return
+  
+        interval = self.interval.text()        
+        if self.check_interval_input(interval)== False:
+            QMessageBox.warning(self, "Bad Input!", "Interval must be an integer number.", QMessageBox.Ok)
+        else:  
+            browse = open('config/browse.txt', 'r').read()
+            log = self.get_log()
+            table  = self.get_table(log)
             f = open("table.html", "w")
             f.write(table)
             f.close()
@@ -144,8 +149,7 @@ class MainWindow(QMainWindow):
     
     def get_log(self):
         path = open('config/browse.txt', 'r').read()
-        #open('config/browse.txt', 'w').close() videti gde ovo pomeriti
-
+        open('config/browse.txt', 'w').close() 
         log = open(path, "r").read().splitlines()
         return log
         
@@ -160,13 +164,17 @@ class MainWindow(QMainWindow):
         table += end
         return table
 
-    def is_number(self,s):
+    def check_interval_input(self,s):
         try:
             int(s)
             return True
         except ValueError:
-            return False         
-            
+            return False
+
+    def check_browse_path(self):
+        path = open('config/browse.txt', 'r').read()        
+        if len(path) == 0: return False
+        else: return True    
               
         QMessageBox.information(self, "Success!", "Table successfully made!", QMessageBox.Ok)
 
