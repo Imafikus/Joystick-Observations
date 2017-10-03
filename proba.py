@@ -153,9 +153,8 @@ class MainWindow(QMainWindow):
                 browse = open('config/browse.txt', 'r').read()
                 log = self.get_log()
                 dates = self.get_dates(log, interval)
-                rows = self.get_rows(log, dates)
-                #table  = self.get_table(log)
-                table  = self.test_table(rows)
+                self.try_shit(log, dates)
+                table  = self.get_table(log)           
                 #print("DATUMI")
                 #self.print_dates(dates)
                 #return
@@ -173,6 +172,19 @@ class MainWindow(QMainWindow):
         open('config/browse.txt', 'w').close() 
         log = open(path, "r").read().splitlines()
         return log
+
+    def try_shit(self, log, dates):
+        log_c = 0
+        dates_c = 0    
+        while dates_c < len(dates):
+            date = dates[dates_c]
+            print (str(date[1]))
+            dates_c += 1
+            
+            
+                   
+        
+        
 
     def get_dates(self, log, interval):  
         dates = []
@@ -195,33 +207,6 @@ class MainWindow(QMainWindow):
             i += 1
         dates.append((second_date, False))
         return dates
-    
-    def get_rows(self, log, dates):
-        rows = []        
-        dates_counter = 0
-        log_counter = 0
-        while dates_counter < len(dates):
-            if (dates[1] == False):
-                time = dates[0].strftime("%H:%M:%S")
-                row = "<tr>\n" + "<td>" + "/" + "</td>\n" + "<td>" + time + "</td>\n" + "<td>" + "/" + "</td>\n" + "<td>" + "/" + "</td>\n" + "</tr>\n"
-                rows.append(row)
-                dates_counter += 1
-            else:
-                meteor = log[log_counter].split()
-                row = "<tr>\n" + "<td>" + str(log_counter+1) + "</td>\n" + "<td>" + meteor[2] + "</td>\n" + "<td>" + meteor[1] + "</td>\n" + "<td>" + meteor[0] + "</td>\n" + "</tr>\n"
-                log_counter+=1
-                dates_counter += 1
-                rows.append(row)
-
-        return rows
-
-    def test_table(self, rows):
-        table = open("config/begin.txt").read()
-        for row in rows:
-            table += row
-        end = open("config/end.txt").read() 
-        table += end
-        return table   
     
     def get_table(self, log):
         table = open("config/begin.txt").read()
