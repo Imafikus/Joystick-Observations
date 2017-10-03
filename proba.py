@@ -152,11 +152,13 @@ class MainWindow(QMainWindow):
                 interval = int(interval)
                 browse = open('config/browse.txt', 'r').read()
                 log = self.get_log()
-                table  = self.get_table(log)
                 dates = self.get_dates(log, interval)
-                print("DATUMI")
-                self.print_dates(dates)
-                return
+                rows = self.get_rows(log, dates)
+                #table  = self.get_table(log)
+                table  = self.test_table(rows)
+                #print("DATUMI")
+                #self.print_dates(dates)
+                #return
                 f = open("table.html", "w")
                 f.write(table)
                 f.close()
@@ -177,24 +179,53 @@ class MainWindow(QMainWindow):
         i = 0
         start_date = datetime.strptime("13:48:00", "%H:%M:%S")
         dates.append(start_date)
-        ref_date = self.add_interval(start_date, interval)
+        first_date = start_date
+        second_date = self.add_interval(start_date, interval)
         while i < len(log):
             meteor = log[i].split()
             string_date = meteor[2]
             date = datetime.strptime(string_date, "%H:%M:%S")
-            if date <= ref_date: 
-                dates.append(date)
+            if (date >= start_date) and (date <= second_date): 
+                dates.append((date, True))
             else:
-                ref_date = self.add_interval(ref_date, interval)
-                dates.append(ref_date)
-                dates.append(date) 
+                first_date = second_date
+                second_date = self.add_interval(second_date, interval)
+                dates.append((first_date, False))
+                dates.append((date, True)) 
             i += 1
+        dates.append((second_date, False))
         return dates
-                
+    
+    def get_rows(self, log, dates):
+        rows = []        
+        dates_counter = 0
+        log_counter = 0
+        while dates_counter < len(dates):
+            if (dates[1] == False):
+                time = dates[0].strftime("%H:%M:%S")
+                row = "<tr>\n" + "<td>" + "/" + "</td>\n" + "<td>" + time + "</td>\n" + "<td>" + "/" + "</td>\n" + "<td>" + "/" + "</td>\n" + "</tr>\n"
+                rows.append(row)
+                dates_counter += 1
+            else:
+                meteor = log[log_counter].split()
+                row = "<tr>\n" + "<td>" + str(log_counter+1) + "</td>\n" + "<td>" + meteor[2] + "</td>\n" + "<td>" + meteor[1] + "</td>\n" + "<td>" + meteor[0] + "</td>\n" + "</tr>\n"
+                log_counter+=1
+                dates_counter += 1
+                rows.append(row)
 
+        return rows
+
+    def test_table(self, rows):
+        table = open("config/begin.txt").read()
+        for row in rows:
+            table += row
+        end = open("config/end.txt").read() 
+        table += end
+        return table   
+    
     def get_table(self, log):
         table = open("config/begin.txt").read()
-        for i in range(0, len(log)):
+        for i in range(0, len(log)): 
             meteor = log[i].split()
             row = "<tr>\n" + "<td>" + str(i+1) + "</td>\n" + "<td>" + meteor[2] + "</td>\n" + "<td>" + meteor[1] + "</td>\n" + "<td>" + meteor[0] + "</td>\n" + "</tr>\n"
             table += row
