@@ -306,14 +306,15 @@ class MainWindow(QMainWindow):
                 first_date = second_date
                 second_date = self.add_interval(second_date, interval)
                 
-                dates.append(first_date)
-                bools.append(False)
                 dates.append(date)
                 bools.append(True)
+                dates.append(first_date)
+                bools.append(False)
             i += 1
         dates.append(second_date)
         bools.append(False)
-        print (dates)
+        for i in range(0, len(dates)):
+            print (dates[i])
         print ("DATUMI")
         stuff = (dates, bools)
         return stuff
