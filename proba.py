@@ -100,18 +100,18 @@ class MainWindow(QMainWindow):
         self.table_width = (self.main_width/100)*44
         self.table_height = (self.main_height/100)*16.67    
         self.table_x = (self.main_width/100)*28
-        self.table_y = (self.main_height/100)*66.67
+        self.table_y = (self.main_height/100)*68.67
 
         self.interval_width = (self.main_width/100)*23.33
         self.interval_height =(self.main_height/100)*10
         self.interval_x = (self.main_width/100)*48.33
-        self.interval_y = (self.main_width/100)*33.33
+        self.interval_y = (self.main_width/100)*28.33
 
         self.lbl_interval_x = (self.main_width/100)*28.33
-        self.lbl_interval_y = (self.main_width/100)*33.33
+        self.lbl_interval_y = (self.main_width/100)*28.33
 
         self.lbl_mins_x = (self.main_width/100)*53.33
-        self.lbl_mins_y = (self.main_width/100)*25
+        self.lbl_mins_y = (self.main_width/100)*19
 
         self.setGeometry(300, 300, self.main_width, self.main_height)
         self.setFixedSize(self.size())
@@ -127,7 +127,32 @@ class MainWindow(QMainWindow):
         self.interval.setText("5")
         self.interval.resize(self.interval_width, self.interval_height)
         self.interval.move(self.interval_x, self.interval_y)
+                
+        #start_time init
+        self.start_lbl = QLabel("Start: ", self)
+        self.start_lbl.move(85, 145)
         
+        self.start_h_lbl = QLabel("H", self)
+        self.start_h_lbl.move(125, 122)
+        self.start_h = QLineEdit(self)
+        self.start_h.setText("0")
+        self.start_h.resize(25, 30)
+        self.start_h.move(120, 145)
+
+        self.start_h_lbl = QLabel("M", self)
+        self.start_h_lbl.move(160, 122)
+        self.start_m = QLineEdit(self)
+        self.start_m.setText("0")
+        self.start_m.resize(25, 30)
+        self.start_m.move(155, 145)        
+
+        self.start_h_lbl = QLabel("S", self)
+        self.start_h_lbl.move(195, 122)
+        self.start_s = QLineEdit(self)
+        self.start_s.setText("0")
+        self.start_s.resize(25, 30)
+        self.start_s.move(190, 145) 
+
         #Button init
 
         make_table = QPushButton('Make Table', self)
