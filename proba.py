@@ -208,24 +208,27 @@ class MainWindow(QMainWindow):
             if self.check_browse_path()== False:
                 QMessageBox.warning(self, "No browse path!", "Choose browse path.", QMessageBox.Ok)
             else:
-                start_date = self.make_start_date(hrs, mins, secs)
-                check_start_date2
+                start_time = self.make_start_time(hrs, mins, secs)
                 log = self.get_log()
-                interval = self.interval.text()        
-                if self.check_interval_input(interval)== False:
-                    QMessageBox.warning(self, "Bad Input!", "Interval must be an integer number.", QMessageBox.Ok)
-                else:
-                    interval = int(interval)
-                    browse = open('config/browse.txt', 'r').read()
-                    stuff = self.get_dates(log, interval)
-                    rows = self.get_rows(log, stuff)
-                    table  = self.make_HTML(rows)           
-                    f = open("table.html", "w")
-                    f.write(table)
-                    f.close()
-                    QMessageBox.information(self, "Success!", "Table successfully made!", QMessageBox.Ok)
 
-    def make_start_date(self, hrs, mins, secs):
+                if self.check_start_time2(start_time, log) == False:
+                    QMessageBox.warning(self, "Bad Input!", "Start time must be smaller than first time stamp in session.", QMessageBox.Ok)                
+                else:
+                    interval = self.interval.text()        
+                    if self.check_interval_input(interval)== False:
+                        QMessageBox.warning(self, "Bad Input!", "Interval must be an integer number.", QMessageBox.Ok)
+                    else:
+                        interval = int(interval)
+                        browse = open('config/browse.txt', 'r').read()
+                        stuff = self.get_dates(log, interval, start_time)
+                        rows = self.get_rows(log, stuff)
+                        table  = self.make_HTML(rows)           
+                        f = open("table.html", "w")
+                        f.write(table)
+                        f.close()
+                        QMessageBox.information(self, "Success!", "Table successfully made!", QMessageBox.Ok)
+
+    def make_start_time(self, hrs, mins, secs):
         if len(hrs) == 1: hrs = "0" + hrs
         if len(mins) == 1: mins = "0" + mins
         if len(secs) == 1: secs = "0" + secs
@@ -233,7 +236,7 @@ class MainWindow(QMainWindow):
         string_date = hrs + mins + secs
         date = datetime.strptime(string_date, "%H%M%S")
         return date 
-                    
+                
     
     def get_log(self):
         path = open('config/browse.txt', 'r').read()
@@ -280,7 +283,7 @@ class MainWindow(QMainWindow):
         
         
 
-    def get_dates(self, log, interval):  
+    def get_dates(self, log, interval, start_date):  
         dates = []
         bools = []
         i = 0
@@ -310,6 +313,8 @@ class MainWindow(QMainWindow):
             i += 1
         dates.append(second_date)
         bools.append(False)
+        print (dates)
+        print ("DATUMI")
         stuff = (dates, bools)
         return stuff
  
@@ -344,12 +349,15 @@ class MainWindow(QMainWindow):
         
         for i in range (0, 24): 
             hrs_check.append(str(i))
+            if i < 9: hrs_check.append("0" + str(i))
 
         for i in range (0, 59): 
             mins_check.append(str(i))
-
+            if i < 9: mins_check.append("0" + str(i))
+        
         for i in range (0, 59): 
             secs_check.append(str(i))
+            if i < 9: secs_check.append("0" + str(i))
 
         if hrs not in hrs_check:
             msg += "Hours must be in range 0-23\n"
@@ -365,7 +373,15 @@ class MainWindow(QMainWindow):
         
         report = (msg, check)
         return report
-           
+    
+    def check_start_time2(self, start_date, log):
+        check = True
+        meteor = log[0].split()
+        string_date = meteor[2]
+        date = datetime.strptime(string_date, "%H:%M:%S")
+        if start_date > date: check = False
+        return check
+        	       
                         
     def center(self):
 
