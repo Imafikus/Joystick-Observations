@@ -113,6 +113,32 @@ class MainWindow(QMainWindow):
         self.lbl_mins_x = (self.main_width/100)*53.33
         self.lbl_mins_y = (self.main_width/100)*19
 
+       
+        self.start_lbl_x = (self.main_width/100)*28.33
+        self.start_lbl_y = (self.main_height/100)*48.33
+
+        
+
+        self.start_h_lbl_x = (self.main_width/100)*41.67
+        self.start_h_lbl_y = (self.main_height/100)*40.67
+        self.start_h_x = (self.main_width/100)*40
+        self.start_h_y = (self.main_height/100)*48.63        
+       
+       
+        self.start_m_lbl_x = (self.main_width/100)*53.33
+        self.start_m_lbl_y = (self.main_height/100)*40.67      
+        self.start_m_x = (self.main_width/100)*51.67
+        self.start_m_y = (self.main_height/100)*48.63
+
+
+        
+        self.start_s_lbl_x = (self.main_width/100)*65
+        self.start_s_lbl_y = (self.main_height/100)*40.67      
+        self.start_s_x = (self.main_width/100)*63.33
+        self.start_s_y = (self.main_height/100)*48.63
+
+
+       
         self.setGeometry(300, 300, self.main_width, self.main_height)
         self.setFixedSize(self.size())
         self.setWindowTitle('Joystick Observation') 
@@ -130,24 +156,24 @@ class MainWindow(QMainWindow):
                 
         #start_time init
         self.start_lbl = QLabel("Start: ", self)
-        self.start_lbl.move(85, 145)
+        self.start_lbl.move(self.start_lbl_x, self.start_lbl_y)
         
         self.start_h_lbl = QLabel("H", self)
-        self.start_h_lbl.move(125, 122)
+        self.start_h_lbl.move(self.start_h_lbl_x, self.start_h_lbl_y)
         self.start_h = QLineEdit(self)
         self.start_h.setText("0")
         self.start_h.resize(25, 30)
-        self.start_h.move(120, 145)
+        self.start_h.move(self.start_h_x, self.start_h_y)
 
-        self.start_h_lbl = QLabel("M", self)
-        self.start_h_lbl.move(160, 122)
+        self.start_m_lbl = QLabel("M", self)
+        self.start_m_lbl.move(self.start_m_lbl_x, self.start_m_lbl_y)
         self.start_m = QLineEdit(self)
         self.start_m.setText("0")
         self.start_m.resize(25, 30)
-        self.start_m.move(155, 145)        
+        self.start_m.move(self.start_m_x, self.start_m_y)        
 
-        self.start_h_lbl = QLabel("S", self)
-        self.start_h_lbl.move(195, 122)
+        self.start_s_lbl = QLabel("S", self)
+        self.start_s_lbl.move(195, 122)
         self.start_s = QLineEdit(self)
         self.start_s.setText("0")
         self.start_s.resize(25, 30)
@@ -168,6 +194,12 @@ class MainWindow(QMainWindow):
         
 
     def table_button(self):
+        
+        print (self.start_h.text())
+        print (self.start_m.text())
+        print (self.start_s.text())
+        return
+        
         if self.check_browse_path()== False:
             QMessageBox.warning(self, "No browse path!", "Choose browse path.", QMessageBox.Ok)
         else:
