@@ -1,9 +1,11 @@
 import sys
 import os
+from datetime import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from datetime import *
+
+
 #uporedjiati sa stringom, ako je trenutni 
 
 
@@ -152,8 +154,9 @@ class MainWindow(QMainWindow):
                 interval = int(interval)
                 browse = open('config/browse.txt', 'r').read()
                 log = self.get_log()
-                dates = self.get_dates(log, interval)
-                self.try_shit(log, dates)
+                stuff = self.get_dates(log, interval)
+                #dates = self.get_dates(log, interval)
+                self.try_shit(log, stuff)
                 table  = self.get_table(log)           
                 #print("DATUMI")
                 #self.print_dates(dates)
@@ -173,13 +176,21 @@ class MainWindow(QMainWindow):
         log = open(path, "r").read().splitlines()
         return log
 
-    def try_shit(self, log, dates):
-        log_c = 0
-        dates_c = 0    
-        while dates_c < len(dates):
-            date = dates[dates_c]
-            print (str(date[1]))
-            dates_c += 1
+    def try_shit(self, log, stuff):
+        dates = stuff[0]
+        bools = stuff[1]
+
+        print(len(bools))
+        print("brm")
+        print(len(dates))       
+        
+            
+        
+        
+    #def get_meteor_row(meteor)
+        
+        
+            
             
             
                    
@@ -188,25 +199,39 @@ class MainWindow(QMainWindow):
 
     def get_dates(self, log, interval):  
         dates = []
+        bools = []
         i = 0
         start_date = datetime.strptime("13:48:00", "%H:%M:%S")
         dates.append(start_date)
+        bools.append(False)
         first_date = start_date
         second_date = self.add_interval(start_date, interval)
         while i < len(log):
             meteor = log[i].split()
             string_date = meteor[2]
             date = datetime.strptime(string_date, "%H:%M:%S")
-            if (date >= start_date) and (date <= second_date): 
-                dates.append((date, True))
+            if (date >= start_date) and (date <= second_date):
+                dates.append(date)
+                bools.append(True) 
+                #dates.append((date, True))
             else:
                 first_date = second_date
                 second_date = self.add_interval(second_date, interval)
-                dates.append((first_date, False))
-                dates.append((date, True)) 
+                
+                dates.append(first_date)
+                bools.append(False)
+                dates.append(date)
+                bools.append(True)
+                                
+               #dates.append((first_date, False))
+               #dates.append((date, True)) 
             i += 1
-        dates.append((second_date, False))
-        return dates
+        #dates.append((second_date, False))
+        dates.append(second_date)
+        bools.append(False)
+        stuff = (dates, bools)
+
+        return stuff
     
     def get_table(self, log):
         table = open("config/begin.txt").read()
