@@ -156,8 +156,8 @@ class MainWindow(QMainWindow):
                 log = self.get_log()
                 stuff = self.get_dates(log, interval)
                 #dates = self.get_dates(log, interval)
-                self.try_shit(log, stuff)
-                table  = self.get_table(log)           
+                rows = self.get_rows(log, stuff)
+                table  = self.make_HTML(rows)           
                 #print("DATUMI")
                 #self.print_dates(dates)
                 #return
@@ -176,23 +176,41 @@ class MainWindow(QMainWindow):
         log = open(path, "r").read().splitlines()
         return log
 
-    def try_shit(self, log, stuff):
-        dates = stuff[0]
-        bools = stuff[1]
+    def get_rows(self, log, stuff):
+            dates = stuff[0]
+            bools = stuff[1]
+            rows = []            
+            k = 0
+            for i in range(0, len(dates)):
+                if bools[i] == False:
+                    interval = dates[i].strftime('%H:%M:%S')
+                    row = self.get_interval_row(interval)
+                    rows.append(row)
+                else:
+                    meteor = log[k].split()
+                    row = self.get_meteor_row(meteor, k)
+                    rows.append(row)
+                    k += 1
+            return rows 
+            
+                   
+    def get_meteor_row(self, meteor, i):
+            row = "<tr>\n" + "<td>" + str(i+1) + "</td>\n" + "<td>" + meteor[2] + "</td>\n" + "<td>" + meteor[1] + "</td>\n" + "<td>" + meteor[0] + "</td>\n" + "</tr>\n"
+            return row        
 
-        print(len(bools))
-        print("brm")
-        print(len(dates))       
-        
-            
-        
-        
-    #def get_meteor_row(meteor)
-        
-        
+    def get_interval_row(self, interval):
+            row = "<tr>\n" + "<td>" + "Interval" + "</td>\n" + "<td>" + interval + "</td>\n" + "<td>" + "/" + "</td>\n" + "<td>" + "/" + "</td>\n" + "</tr>\n"                
+            return row
             
             
-            
+    def make_HTML(self, rows):
+        table = open("config/begin.txt").read()
+        for i in range (0, len(rows)):
+            table += rows[i]
+        end = open("config/end.txt").read()
+        table += end
+        return table
+                
                    
         
         
@@ -222,26 +240,12 @@ class MainWindow(QMainWindow):
                 bools.append(False)
                 dates.append(date)
                 bools.append(True)
-                                
-               #dates.append((first_date, False))
-               #dates.append((date, True)) 
             i += 1
-        #dates.append((second_date, False))
         dates.append(second_date)
         bools.append(False)
         stuff = (dates, bools)
-
         return stuff
-    
-    def get_table(self, log):
-        table = open("config/begin.txt").read()
-        for i in range(0, len(log)): 
-            meteor = log[i].split()
-            row = "<tr>\n" + "<td>" + str(i+1) + "</td>\n" + "<td>" + meteor[2] + "</td>\n" + "<td>" + meteor[1] + "</td>\n" + "<td>" + meteor[0] + "</td>\n" + "</tr>\n"
-            table += row
-        end = open("config/end.txt").read()
-        table += end
-        return table
+ 
 
     def add_interval(self, tm, mins):
         fulldate = datetime(1900, 1, 1, tm.hour, tm.minute, tm.second)
