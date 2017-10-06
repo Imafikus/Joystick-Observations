@@ -17,7 +17,7 @@ class BrowseWindow(QWidget):
         self.initUI()
 
     def initUI(self):
-        browse_width = 450
+        browse_width = 550
         browse_height = 200
 
         lbl0_x = (browse_width/100)*11.11
@@ -221,6 +221,7 @@ class MainWindow(QMainWindow):
                         interval = int(interval)
                         browse = open('config/browse.txt', 'r').read()
                         stuff = self.get_dates(log, interval, start_time)
+                        #return
                         rows = self.get_rows(log, stuff)
                         table  = self.make_HTML(rows)           
                         f = open("table.html", "w")
@@ -267,7 +268,7 @@ class MainWindow(QMainWindow):
             return row        
 
     def get_interval_row(self, interval):
-            row = "<tr>\n" + "<td>" + "Interval" + "</td>\n" + "<td>" + interval + "</td>\n" + "<td>" + "/" + "</td>\n" + "<td>" + "/" + "</td>\n" + "</tr>\n"                
+            row = "<tr>\n" + "<td>" + "Interval" + "</td>\n" + "<td>" + interval + "</td>\n" + "<td>" + "-" + "</td>\n" + "<td>" + "-" + "</td>\n" + "</tr>\n"                
             return row
             
             
@@ -278,10 +279,6 @@ class MainWindow(QMainWindow):
         end = open("config/end.txt").read()
         table += end
         return table
-                
-                   
-        
-        
 
     def get_dates(self, log, interval, start_date):  
         dates = []
@@ -292,31 +289,47 @@ class MainWindow(QMainWindow):
         bools.append(False)
         first_date = start_date
         second_date = self.add_interval(start_date, interval)
+        print(first_date)         
+        print(second_date)
 
         while i < len(log):
             meteor = log[i].split()
             string_date = meteor[2]
             date = datetime.strptime(string_date, "%H:%M:%S")
-
-            if (date >= start_date) and (date <= second_date):
+            #print(date)
+            if (date >= first_date) and (date <= second_date):
                 dates.append(date)
                 bools.append(True) 
                 
             else:
                 first_date = second_date
                 second_date = self.add_interval(second_date, interval)
+                print(first_date)
+                print(second_date)
+                return
+                dates.append(first_date)
+                bools.append(False)
                 
                 dates.append(date)
                 bools.append(True)
-                dates.append(first_date)
-                bools.append(False)
+
+                
+                                
             i += 1
+
         dates.append(second_date)
         bools.append(False)
+        """
         for i in range(0, len(dates)):
             print (dates[i])
         print ("DATUMI")
+
+        for i in range(0, len(bools)):
+            print (bools[i])
+        print ("BOOLS")
+        """
         stuff = (dates, bools)
+       
         return stuff
  
 
