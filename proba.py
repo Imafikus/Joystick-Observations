@@ -216,12 +216,13 @@ class MainWindow(QMainWindow):
                 else:
                     interval = self.interval.text()        
                     if self.check_interval_input(interval)== False:
-                        QMessageBox.warning(self, "Bad Input!", "Interval must be an integer number.", QMessageBox.Ok)
+                        QMessageBox.warning(self, "Bad Input!", "Interval must be positive integer number.", QMessageBox.Ok)
                     else:
                         interval = int(interval)
                         browse = open('config/browse.txt', 'r').read()
-                        stuff = self.get_dates(log, interval, start_time)
-                        #return
+                        self.get_dates(log, interval, start_time)
+                        return
+
                         rows = self.get_rows(log, stuff)
                         table  = self.make_HTML(rows)           
                         f = open("table.html", "w")
@@ -260,7 +261,6 @@ class MainWindow(QMainWindow):
                     row = self.get_meteor_row(meteor, k)
                     rows.append(row)
                     k += 1
-            rows.sort()            
             return rows 
             
                    
@@ -283,52 +283,29 @@ class MainWindow(QMainWindow):
 
     def get_dates(self, log, interval, start_date):  
         
-
+        end_date = datetime.strptime("14:48:00", "%H:%M:%S")
         dates = []
         bools = []
         i = 0
         start_date = datetime.strptime("13:48:00", "%H:%M:%S")
-        dates.append(start_date)
-        bools.append(False)
-        first_date = start_date
-        second_date = self.add_interval(start_date, interval)
-        
 
-        while i < len(log):
+        for i in range(0, len(log)):
             meteor = log[i].split()
             string_date = meteor[2]
             date = datetime.strptime(string_date, "%H:%M:%S")
-            #print(date)
-            if (date >= first_date) and (date <= second_date):
-                dates.append(date)
-                bools.append(True) 
-                if(date < second_date):
-                    print(date)
-                    print("kurcina")
-                
-            else:
-                dates.append(second_date)
-                bools.append(False)
+            dates.append(date)
+            bools.append(True)
 
-                first_date = second_date
-                second_date = self.add_interval(second_date, interval)
-                #print(first_date)
-                #print(second_date)
-                #return
-                #dates.append(first_date)
-                #bools.append(False)
-                
-                dates.append(date)
-                bools.append(True)
-                        
-            i += 1
-    
-        dates.append(second_date)
-        bools.append(False)
+        while start_date <= end_date:
+            dates.append(start_date)
+            bools.append(False)
+            start_date = self.add_interval(start_date, interval)
+                          
+        self.sort_date_tupple(dates, bools) 
         
-        stuff = (dates, bools)
-       
-        return stuff
+
+    
+        
  
 
     def add_interval(self, tm, mins):
@@ -336,11 +313,35 @@ class MainWindow(QMainWindow):
         secs = mins*60
         fulldate = fulldate + timedelta(seconds=secs)
         return fulldate 
+    
+    def sort_date_tupple(self, dates, bools):
+
+        for i in range(0, len(dates)-1):
+            for j in range(1, i+1):
+                if(dates[j-1] > dates[j]):
+
+                    temp_date = dates[j-1];
+                    dates[j-1] = dates[j];
+                    dates[j] = temp_date; 
+
+                    temp_bools = bools[j-1];
+                    bools[j-1] = bools[j];
+                    bools[j] = temp_bools;
+        
+        for i in range(0, len(dates)):
+            print(dates[i]) 
+                
+            
+            
+            
 
     def check_interval_input(self,s):
         try:
             int(s)
-            return True
+            if int(s) > 0:
+                return True
+            else:
+                return False
         except ValueError:
             return False
 
