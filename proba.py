@@ -260,6 +260,7 @@ class MainWindow(QMainWindow):
                     row = self.get_meteor_row(meteor, k)
                     rows.append(row)
                     k += 1
+            rows.sort()            
             return rows 
             
                    
@@ -281,6 +282,8 @@ class MainWindow(QMainWindow):
         return table
 
     def get_dates(self, log, interval, start_date):  
+        
+
         dates = []
         bools = []
         i = 0
@@ -289,8 +292,7 @@ class MainWindow(QMainWindow):
         bools.append(False)
         first_date = start_date
         second_date = self.add_interval(start_date, interval)
-        print(first_date)         
-        print(second_date)
+        
 
         while i < len(log):
             meteor = log[i].split()
@@ -300,34 +302,30 @@ class MainWindow(QMainWindow):
             if (date >= first_date) and (date <= second_date):
                 dates.append(date)
                 bools.append(True) 
+                if(date < second_date):
+                    print(date)
+                    print("kurcina")
                 
             else:
+                dates.append(second_date)
+                bools.append(False)
+
                 first_date = second_date
                 second_date = self.add_interval(second_date, interval)
-                print(first_date)
-                print(second_date)
-                return
-                dates.append(first_date)
-                bools.append(False)
+                #print(first_date)
+                #print(second_date)
+                #return
+                #dates.append(first_date)
+                #bools.append(False)
                 
                 dates.append(date)
                 bools.append(True)
-
-                
-                                
+                        
             i += 1
-
+    
         dates.append(second_date)
         bools.append(False)
-        """
-        for i in range(0, len(dates)):
-            print (dates[i])
-        print ("DATUMI")
-
-        for i in range(0, len(bools)):
-            print (bools[i])
-        print ("BOOLS")
-        """
+        
         stuff = (dates, bools)
        
         return stuff
