@@ -220,9 +220,7 @@ class MainWindow(QMainWindow):
                     else:
                         interval = int(interval)
                         browse = open('config/browse.txt', 'r').read()
-                        self.get_dates(log, interval, start_time)
-                        return
-
+                        stuff = self.get_dates(log, interval, start_time)
                         rows = self.get_rows(log, stuff)
                         table  = self.make_HTML(rows)           
                         f = open("table.html", "w")
@@ -302,6 +300,10 @@ class MainWindow(QMainWindow):
             start_date = self.add_interval(start_date, interval)
                           
         self.sort_date_tupple(dates, bools) 
+
+        stuff = (dates, bools)
+        return stuff
+        
         
 
     
@@ -328,8 +330,7 @@ class MainWindow(QMainWindow):
                     bools[j-1] = bools[j];
                     bools[j] = temp_bools;
         
-        for i in range(0, len(dates)):
-            print(dates[i]) 
+          
                 
             
             
