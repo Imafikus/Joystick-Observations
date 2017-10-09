@@ -222,13 +222,6 @@ class MainWindow(QMainWindow):
                         interval = int(interval)
                         browse = open('config/browse.txt', 'r').read()
                         stuff = self.get_dates(log, interval, start_time)   
-                        """
-                        print (stuff)
-                        return
-                        for i in range(1, len(stuff)):
-                            print(stuff[i])
-                        return
-                        """
                         rows = self.get_rows(log, stuff)
                         table  = self.make_HTML(rows)           
                         f = open("table.html", "w")
@@ -245,7 +238,6 @@ class MainWindow(QMainWindow):
         date = datetime.strptime(string_date, "%H%M%S")
         return date 
                 
-    
     def get_log(self):
         path = open('config/browse.txt', 'r').read()
         open('config/browse.txt', 'w').close() 
@@ -268,8 +260,7 @@ class MainWindow(QMainWindow):
                     rows.append(row)
                     k += 1
             return rows 
-            
-                   
+               
     def get_meteor_row(self, meteor, i):
             row = "<tr>\n" + "<td>" + str(i+1) + "</td>\n" + "<td>" + meteor[2] + "</td>\n" + "<td>" + meteor[1] + "</td>\n" + "<td>" + meteor[0] + "</td>\n" + "</tr>\n"
             return row        
@@ -277,7 +268,6 @@ class MainWindow(QMainWindow):
     def get_interval_row(self, interval):
             row = "<tr>\n" + "<td>" + "Interval" + "</td>\n" + "<td>" + interval + "</td>\n" + "<td>" + "-" + "</td>\n" + "<td>" + "-" + "</td>\n" + "</tr>\n"                
             return row
-            
             
     def make_HTML(self, rows):
         table = open("config/begin.txt").read()
@@ -289,7 +279,6 @@ class MainWindow(QMainWindow):
 
     def get_dates(self, log, interval, start_date):  
         
-        #stuff = []
         end_date = datetime.strptime("14:48:00", "%H:%M:%S")
         dates = []
         bools = []
@@ -302,31 +291,18 @@ class MainWindow(QMainWindow):
             date = datetime.strptime(string_date, "%H:%M:%S")
             dates.append(date)
             bools.append(True)
-            #data = (date, True)
-            #stuff.append(data)
         while start_date <= end_date:
             dates.append(start_date)
             bools.append(False)
-            #data = (start_date, False)
-            #stuff.append(data)
             start_date = self.add_interval(start_date, interval)
                           
         self.sort_date_tupple(dates, bools) 
         
         dates.append(end_date)
         bools.append(False)
-        #data = (end_date, False)
-        #stuff.append(data)        
-
+             
         stuff = (dates, bools)
-        """
-        sorted(stuff, key = itemgetter(1))
-        for i in range(1, len(stuff)):
-            print(stuff[i])
-        
-        """
         return stuff
-        #print(stuff)
 
     def add_interval(self, tm, mins):
         fulldate = datetime(1900, 1, 1, tm.hour, tm.minute, tm.second)
@@ -335,14 +311,12 @@ class MainWindow(QMainWindow):
         return fulldate 
     
     def sort_date_tupple(self, dates, bools):
-        
-        check = False  # We haven't started sorting yet
-
+        check = False  
         while not check:
-            check = True  # Assume the list is now sorted
+            check = True  
             for i in range(0, len(dates)-1):
                 if dates[i] > dates[i + 1]:
-                    check = False  # We found two elements in the wrong order
+                    check = False
                     hold = dates[i + 1]
                     dates[i + 1] = dates[i]
                     dates[i] = hold
@@ -351,19 +325,6 @@ class MainWindow(QMainWindow):
                     bools[i + 1] = bools[i]
                     bools[i] = hold_b        
     
-        """
-        for i in range(0, len(dates)-1):
-            for j in range(1, i):
-                if(dates[j-1] > dates[j]):
-
-                    temp_date = dates[j];
-                    dates[j] = dates[i];
-                    dates[i] = temp_date; 
-
-                    temp_bools = bools[j];
-                    bools[j] = bools[i];
-                    bools[i] = temp_bools;
-        """
     def check_interval_input(self,s):
         try:
             int(s)
@@ -423,10 +384,8 @@ class MainWindow(QMainWindow):
         date = datetime.strptime(string_date, "%H:%M:%S")
         if start_date > date: check = False
         return check
-        	       
-                        
+        	          
     def center(self):
-
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
