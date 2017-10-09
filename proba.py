@@ -1,6 +1,7 @@
 import sys
 import os
 from datetime import *
+from operator import itemgetter
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -220,7 +221,14 @@ class MainWindow(QMainWindow):
                     else:
                         interval = int(interval)
                         browse = open('config/browse.txt', 'r').read()
-                        stuff = self.get_dates(log, interval, start_time)
+                        stuff = self.get_dates(log, interval, start_time)   
+                        """
+                        print (stuff)
+                        return
+                        for i in range(1, len(stuff)):
+                            print(stuff[i])
+                        return
+                        """
                         rows = self.get_rows(log, stuff)
                         table  = self.make_HTML(rows)           
                         f = open("table.html", "w")
@@ -281,31 +289,44 @@ class MainWindow(QMainWindow):
 
     def get_dates(self, log, interval, start_date):  
         
+        #stuff = []
         end_date = datetime.strptime("14:48:00", "%H:%M:%S")
         dates = []
         bools = []
         i = 0
-        #start_date = datetime.strptime("13:48:00", "%H:%M:%S")
+        start_date = datetime.strptime("13:48:00", "%H:%M:%S")
 
         for i in range(0, len(log)):
             meteor = log[i].split()
-            string_date = meteor[2]
+            string_date = meteor[2]          
             date = datetime.strptime(string_date, "%H:%M:%S")
             dates.append(date)
             bools.append(True)
-
+            #data = (date, True)
+            #stuff.append(data)
         while start_date <= end_date:
             dates.append(start_date)
             bools.append(False)
+            #data = (start_date, False)
+            #stuff.append(data)
             start_date = self.add_interval(start_date, interval)
                           
         self.sort_date_tupple(dates, bools) 
         
         dates.append(end_date)
         bools.append(False)
+        #data = (end_date, False)
+        #stuff.append(data)        
 
         stuff = (dates, bools)
+        """
+        sorted(stuff, key = itemgetter(1))
+        for i in range(1, len(stuff)):
+            print(stuff[i])
+        
+        """
         return stuff
+        #print(stuff)
 
     def add_interval(self, tm, mins):
         fulldate = datetime(1900, 1, 1, tm.hour, tm.minute, tm.second)
@@ -314,19 +335,35 @@ class MainWindow(QMainWindow):
         return fulldate 
     
     def sort_date_tupple(self, dates, bools):
+        
+        check = False  # We haven't started sorting yet
 
+        while not check:
+            check = True  # Assume the list is now sorted
+            for i in range(0, len(dates)-1):
+                if dates[i] > dates[i + 1]:
+                    check = False  # We found two elements in the wrong order
+                    hold = dates[i + 1]
+                    dates[i + 1] = dates[i]
+                    dates[i] = hold
+
+                    hold_b = bools[i + 1]
+                    bools[i + 1] = bools[i]
+                    bools[i] = hold_b        
+    
+        """
         for i in range(0, len(dates)-1):
             for j in range(1, i):
                 if(dates[j-1] > dates[j]):
 
-                    temp_date = dates[j-1];
-                    dates[j-1] = dates[j];
-                    dates[j] = temp_date; 
+                    temp_date = dates[j];
+                    dates[j] = dates[i];
+                    dates[i] = temp_date; 
 
-                    temp_bools = bools[j-1];
-                    bools[j-1] = bools[j];
-                    bools[j] = temp_bools;
-
+                    temp_bools = bools[j];
+                    bools[j] = bools[i];
+                    bools[i] = temp_bools;
+        """
     def check_interval_input(self,s):
         try:
             int(s)
