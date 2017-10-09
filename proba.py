@@ -1,13 +1,9 @@
 import sys
 import os
 from datetime import *
-from operator import itemgetter
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-
-
-#uporedjiati sa stringom, ako je trenutni 
 
 
 class BrowseWindow(QWidget):
@@ -43,16 +39,11 @@ class BrowseWindow(QWidget):
         self.path = str(QFileDialog.getOpenFileName())
         self.path = self.path[2:len(self.path)-19] 
         
-        
         self.lbl0 = QLabel("Current Path: "+ self.path, self)
         self.lbl0.move(lbl0_x, lbl0_y)   
 
-
         self.lbl1 = QLabel("Save current path?", self)
         self.lbl1.move(lbl1_x, lbl1_y)
-
-
-        
 
         OK = QPushButton('OK', self)
         OK.resize(ok_width, ok_height)
@@ -84,9 +75,7 @@ class MainWindow(QMainWindow):
         
     def initUI(self):
 
-        
         #toolbar init
-        
         BrowseAct = QAction(QIcon('icons/browse.png'), 'Browse for folder', self)
         BrowseAct.setShortcut('Ctrl+B')
         BrowseAct.triggered.connect(self.browse)
@@ -113,33 +102,25 @@ class MainWindow(QMainWindow):
 
         self.lbl_mins_x = (self.main_width/100)*53.33
         self.lbl_mins_y = (self.main_width/100)*19
-
        
         self.start_lbl_x = (self.main_width/100)*28.33
         self.start_lbl_y = (self.main_height/100)*48.33
 
-        
-
         self.start_h_lbl_x = (self.main_width/100)*41.67
         self.start_h_lbl_y = (self.main_height/100)*40.67
         self.start_h_x = (self.main_width/100)*40
-        self.start_h_y = (self.main_height/100)*48.63        
-       
+        self.start_h_y = (self.main_height/100)*48.63               
        
         self.start_m_lbl_x = (self.main_width/100)*53.33
         self.start_m_lbl_y = (self.main_height/100)*40.67      
         self.start_m_x = (self.main_width/100)*51.67
         self.start_m_y = (self.main_height/100)*48.63
-
-
         
         self.start_s_lbl_x = (self.main_width/100)*65
         self.start_s_lbl_y = (self.main_height/100)*40.67      
         self.start_s_x = (self.main_width/100)*63.33
         self.start_s_y = (self.main_height/100)*48.63
 
-
-       
         self.setGeometry(300, 300, self.main_width, self.main_height)
         self.setFixedSize(self.size())
         self.setWindowTitle('Joystick Observation') 
@@ -193,9 +174,7 @@ class MainWindow(QMainWindow):
         self.B = BrowseWindow()
         self.B.show()
         
-
-    def table_button(self):
-                
+    def table_button(self):  
         hrs = self.start_h.text()
         mins = self.start_m.text()
         secs = self.start_s.text()
@@ -283,8 +262,7 @@ class MainWindow(QMainWindow):
         dates = []
         bools = []
         i = 0
-        start_date = datetime.strptime("13:48:00", "%H:%M:%S")
-
+        
         for i in range(0, len(log)):
             meteor = log[i].split()
             string_date = meteor[2]          
