@@ -85,42 +85,62 @@ class MainWindow(QMainWindow):
 
         #window init
         self.main_width = 300
-        self.main_height = 300
-
+        self.main_height = 350
+        #table vals
         self.table_width = (self.main_width/100)*44
         self.table_height = (self.main_height/100)*16.67    
         self.table_x = (self.main_width/100)*28
-        self.table_y = (self.main_height/100)*68.67
-
+        self.table_y = (self.main_height/100)*70
+        #inteval vals
         self.interval_width = (self.main_width/100)*23.33
-        self.interval_height =(self.main_height/100)*10
+        self.interval_height =(self.main_height/100)*7.5
         self.interval_x = (self.main_width/100)*48.33
-        self.interval_y = (self.main_width/100)*28.33
+        self.interval_y = (self.main_width/100)*25.33
 
         self.lbl_interval_x = (self.main_width/100)*28.33
-        self.lbl_interval_y = (self.main_width/100)*28.33
+        self.lbl_interval_y = (self.main_width/100)*25.33
 
         self.lbl_mins_x = (self.main_width/100)*53.33
-        self.lbl_mins_y = (self.main_width/100)*19
-       
+        self.lbl_mins_y = (self.main_width/100)*16
+        #start_time vals
         self.start_lbl_x = (self.main_width/100)*28.33
-        self.start_lbl_y = (self.main_height/100)*48.33
+        self.start_lbl_y = (self.main_height/100)*38.33
 
         self.start_h_lbl_x = (self.main_width/100)*41.67
-        self.start_h_lbl_y = (self.main_height/100)*40.67
+        self.start_h_lbl_y = (self.main_height/100)*31.67
         self.start_h_x = (self.main_width/100)*40
-        self.start_h_y = (self.main_height/100)*48.63               
+        self.start_h_y = (self.main_height/100)*38.63               
        
         self.start_m_lbl_x = (self.main_width/100)*53.33
-        self.start_m_lbl_y = (self.main_height/100)*40.67      
+        self.start_m_lbl_y = (self.main_height/100)*31.67      
         self.start_m_x = (self.main_width/100)*51.67
-        self.start_m_y = (self.main_height/100)*48.63
+        self.start_m_y = (self.main_height/100)*38.63
         
         self.start_s_lbl_x = (self.main_width/100)*65
-        self.start_s_lbl_y = (self.main_height/100)*40.67      
+        self.start_s_lbl_y = (self.main_height/100)*31.67      
         self.start_s_x = (self.main_width/100)*63.33
-        self.start_s_y = (self.main_height/100)*48.63
+        self.start_s_y = (self.main_height/100)*38.63
 
+        #end_time vals
+        self.end_lbl_x = (self.main_width/100)*28.33
+        self.end_lbl_y = (self.main_height/100)*54.33
+
+        self.end_h_lbl_x = (self.main_width/100)*41.67
+        self.end_h_lbl_y = (self.main_height/100)*47.67
+        self.end_h_x = (self.main_width/100)*40
+        self.end_h_y = (self.main_height/100)*54.63               
+       
+        self.end_m_lbl_x = (self.main_width/100)*53.33
+        self.end_m_lbl_y = (self.main_height/100)*47.67      
+        self.end_m_x = (self.main_width/100)*51.67
+        self.end_m_y = (self.main_height/100)*54.63
+        
+        self.end_s_lbl_x = (self.main_width/100)*65
+        self.end_s_lbl_y = (self.main_height/100)*47.67      
+        self.end_s_x = (self.main_width/100)*63.33
+        self.end_s_y = (self.main_height/100)*54.63
+
+        #main window
         self.setGeometry(300, 300, self.main_width, self.main_height)
         self.setFixedSize(self.size())
         self.setWindowTitle('Joystick Observation') 
@@ -155,11 +175,39 @@ class MainWindow(QMainWindow):
         self.start_m.move(self.start_m_x, self.start_m_y)        
 
         self.start_s_lbl = QLabel("S", self)
-        self.start_s_lbl.move(195, 122)
+        self.start_s_lbl.move(self.start_s_lbl_x, self.start_s_lbl_y)
         self.start_s = QLineEdit(self)
         self.start_s.setText("0")
         self.start_s.resize(25, 30)
-        self.start_s.move(190, 145) 
+        self.start_s.move(self.start_s_x, self.start_s_y)
+
+        #end_time init        
+
+        self.end_lbl = QLabel("End: ", self)
+        self.end_lbl.move(self.end_lbl_x, self.end_lbl_y)
+        
+        self.end_h_lbl = QLabel("H", self)
+        self.end_h_lbl.move(self.end_h_lbl_x, self.end_h_lbl_y)
+        self.end_h = QLineEdit(self)
+        self.end_h.setText("0")
+        self.end_h.resize(25, 30)
+        self.end_h.move(self.end_h_x, self.end_h_y)
+
+        self.end_m_lbl = QLabel("M", self)
+        self.end_m_lbl.move(self.end_m_lbl_x, self.end_m_lbl_y)
+        self.end_m = QLineEdit(self)
+        self.end_m.setText("0")
+        self.end_m.resize(25, 30)
+        self.end_m.move(self.end_m_x, self.end_m_y)        
+
+        self.end_s_lbl = QLabel("S", self)
+        self.end_s_lbl.move(self.end_s_lbl_x, self.end_s_lbl_y)
+        self.end_s = QLineEdit(self)
+        self.end_s.setText("0")
+        self.end_s.resize(25, 30)
+        self.end_s.move(self.end_s_x, self.end_s_y) 
+ 
+ 
 
         #Button init
 
@@ -175,11 +223,15 @@ class MainWindow(QMainWindow):
         self.B.show()
         
     def table_button(self):  
-        hrs = self.start_h.text()
-        mins = self.start_m.text()
-        secs = self.start_s.text()
+        start_hrs = self.start_h.text()
+        start_mins = self.start_m.text()
+        start_secs = self.start_s.text()
 
-        report = self.check_start(hrs, mins, secs)
+        end_hrs = self.end_h.text()
+        end_mins = self.end_m.text()
+        end_secs = self.end_s.text()
+        
+        report = self.check_input(start_hrs, start_mins, start_secs, end_hrs, end_mins, end_secs)
 
         if report[1] == False:
             QMessageBox.warning(self, "Error", report[0], QMessageBox.Ok)
@@ -188,11 +240,15 @@ class MainWindow(QMainWindow):
             if self.check_browse_path()== False:
                 QMessageBox.warning(self, "No browse path!", "Choose browse path.", QMessageBox.Ok)
             else:
-                start_time = self.make_start_time(hrs, mins, secs)
+                start_time = self.make_start_time(start_hrs, start_mins, start_secs)
+
+                end_time = self.make_end_time(end_hrs, end_mins, end_secs)
                 log = self.get_log()
 
                 if self.check_start_time2(start_time, log) == False:
-                    QMessageBox.warning(self, "Bad Input!", "Start time must be smaller than first time stamp in session.", QMessageBox.Ok)                
+                    QMessageBox.warning(self, "Bad Input!", "Start time must be smaller than first time stamp in session.", QMessageBox.Ok) 
+                if self.check_end_time2(end_time, log) == False:
+                    QMessageBox.warning(self, "Bad Input!", "End time must be greater than last time stamp in session.", QMessageBox.Ok)                
                 else:
                     interval = self.interval.text()        
                     if self.check_interval_input(interval)== False:
@@ -200,7 +256,7 @@ class MainWindow(QMainWindow):
                     else:
                         interval = int(interval)
                         browse = open('config/browse.txt', 'r').read()
-                        stuff = self.get_dates(log, interval, start_time)   
+                        stuff = self.get_dates(log, interval, start_time, end_time)   
                         rows = self.get_rows(log, stuff)
                         table  = self.make_HTML(rows)           
                         f = open("table.html", "w")
@@ -209,6 +265,15 @@ class MainWindow(QMainWindow):
                         QMessageBox.information(self, "Success!", "Table successfully made!", QMessageBox.Ok)
 
     def make_start_time(self, hrs, mins, secs):
+        if len(hrs) == 1: hrs = "0" + hrs
+        if len(mins) == 1: mins = "0" + mins
+        if len(secs) == 1: secs = "0" + secs
+
+        string_date = hrs + mins + secs
+        date = datetime.strptime(string_date, "%H%M%S")
+        return date 
+    
+    def make_end_time(self, hrs, mins, secs):
         if len(hrs) == 1: hrs = "0" + hrs
         if len(mins) == 1: mins = "0" + mins
         if len(secs) == 1: secs = "0" + secs
@@ -256,9 +321,7 @@ class MainWindow(QMainWindow):
         table += end
         return table
 
-    def get_dates(self, log, interval, start_date):  
-        
-        end_date = datetime.strptime("14:48:00", "%H:%M:%S")
+    def get_dates(self, log, interval, start_date, end_date):   
         dates = []
         bools = []
         i = 0
@@ -275,9 +338,9 @@ class MainWindow(QMainWindow):
             start_date = self.add_interval(start_date, interval)
                           
         self.sort_date_tupple(dates, bools) 
-        
-        dates.append(end_date)
-        bools.append(False)
+        if dates[len(dates)-1] < end_date:
+            dates.append(end_date)
+            bools.append(False)
              
         stuff = (dates, bools)
         return stuff
@@ -320,8 +383,13 @@ class MainWindow(QMainWindow):
               
         QMessageBox.information(self, "Success!", "Table successfully made!", QMessageBox.Ok)
 
-    def check_start(self, hrs, mins, secs):
+    def check_input(self, start_hrs, start_mins, start_secs, end_hrs, end_mins, end_secs):
         check = True
+
+        hrs_check = []
+        mins_check = []
+        secs_check = []
+        
         hrs_check = []
         mins_check = []
         secs_check = []
@@ -340,15 +408,15 @@ class MainWindow(QMainWindow):
             secs_check.append(str(i))
             if i < 9: secs_check.append("0" + str(i))
 
-        if hrs not in hrs_check:
+        if (start_hrs not in hrs_check) or (end_hrs not in hrs_check):
             msg += "Hours must be in range 0-23\n"
             check = False
 
-        if mins not in mins_check:
+        if (start_mins not in mins_check) or (end_mins not in mins_check):
             msg += "Minutes must be in range 0-59\n"
             check = False
 
-        if secs not in secs_check:
+        if (start_secs not in secs_check) or (end_secs not in secs_check):
             msg += "Seconds must be in range 0-59\n"
             check = False
         
@@ -361,6 +429,14 @@ class MainWindow(QMainWindow):
         string_date = meteor[2]
         date = datetime.strptime(string_date, "%H:%M:%S")
         if start_date > date: check = False
+        return check
+
+    def check_end_time2(self, end_date, log):
+        check = True
+        meteor = log[len(log)-1].split()
+        string_date = meteor[2]
+        date = datetime.strptime(string_date, "%H:%M:%S")
+        if end_date < date: check = False
         return check
         	          
     def center(self):
